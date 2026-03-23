@@ -30,6 +30,33 @@ npx playwright-cli type <text>       # type text into focused element
 npx playwright-cli screenshot        # take a screenshot
 ```
 
+### Named sessions (multiple browsers)
+
+Use the `-s=<session>` flag to run multiple independent browser instances. Each session has its own browser window and state.
+
+```bash
+# Main agent's browser
+npx playwright-cli -s=main open --headed
+npx playwright-cli -s=main state-load storage-state.json
+npx playwright-cli -s=main goto 'https://www.linkedin.com/jobs/...'
+
+# Subagent 1's browser (independent)
+npx playwright-cli -s=apply1 open --headed
+npx playwright-cli -s=apply1 state-load storage-state.json
+npx playwright-cli -s=apply1 goto 'https://www.linkedin.com/jobs/...'
+
+# Subagent 2's browser (independent)
+npx playwright-cli -s=apply2 open --headed
+npx playwright-cli -s=apply2 state-load storage-state.json
+```
+
+**Rules:**
+- Every `playwright-cli` command must include `-s=<session>` to target the correct browser.
+- Each subagent must use its own unique session name (e.g., `apply1`, `apply2`, `apply3`).
+- **Max 3 concurrent sessions** to avoid rate limiting and resource issues.
+- Each session needs its own `state-load` call — loading state in one session does not affect others.
+- Always `close` the session when the subagent is done: `npx playwright-cli -s=apply1 close`
+
 ### Useful commands
 
 | Command | Description |
@@ -114,31 +141,39 @@ npx playwright-cli screenshot        # take a screenshot
 
 ## Subagent workflow for bulk applications
 
-When applying to multiple jobs, **always use a subagent for each application** to avoid filling the main conversation's context window. The main agent should:
+When applying to multiple jobs, **always use a subagent for each application** to avoid filling the main conversation's context window. Each subagent gets its own named browser session, so **up to 3 can run in parallel**.
 
-1. Open the browser, load session, and navigate to the jobs list
-2. Take a snapshot and identify design-related jobs to apply to
-3. For each job, spawn a **sequential** subagent (not parallel — they share the same browser) with a prompt like:
+The main agent should:
+
+1. Open its own browser (`-s=main`), load session, and navigate to the jobs list
+2. Take a snapshot and identify jobs to apply to
+3. Spawn up to **3 parallel subagents**, each with its own session name. Example prompt:
 
 ```
-Apply to the job currently visible in the browser. The job is: "[Job Title]" at "[Company]".
+Apply to this job: "[Job Title]" at "[Company]". Job URL: [URL]
+
+Your browser session name is: apply1
 
 Instructions:
 - Read me/ABOUT_ME.md and me/EXPERIENCE.md for profile context
-- Read CLAUDE.md for the Easy Apply flow
-- Click on the job in the list (ref: [ref]) to open the detail panel
-- Click the Easy Apply button and complete all form steps
-- If there's a cover letter step, generate one using: node generate-cover-letter.js "cover letter text"
+- Read CLAUDE.md for the Easy Apply flow and named session usage
+- Open your own browser: npx playwright-cli -s=apply1 open --headed
+- Load session: npx playwright-cli -s=apply1 state-load storage-state.json
+- Navigate to the job URL and complete the application
+- IMPORTANT: Every playwright-cli command must include -s=apply1
+- If there's a cover letter step, generate one using: node generate-cover-letter.js "Company Name" "cover letter text"
   Write a tailored cover letter based on the job description (from the snapshot), me/ABOUT_ME.md, and me/EXPERIENCE.md
   Then upload the generated cover letter PDF via the file upload button in the form
 - After submitting, log the application: node log-application.js "Title" "Company" "Location" "Type" "URL" "notes"
+- Close your browser when done: npx playwright-cli -s=apply1 close
 - Report back: success/failure, job title, company, and any issues encountered
 ```
 
-4. Wait for each subagent to finish before spawning the next one (they share the browser)
-5. After all applications are done, summarize results to the user
+4. Run up to 3 subagents in parallel (each with its own session: `apply1`, `apply2`, `apply3`)
+5. As subagents finish, spawn new ones for remaining jobs (keep max 3 concurrent)
+6. After all applications are done, summarize results to the user
 
-This keeps the main context clean — each application involves many snapshots and form interactions that would otherwise consume the context window.
+This keeps the main context clean and allows parallel applications — each subagent has its own browser window and context.
 
 ## Cover letter generation
 
@@ -199,6 +234,18 @@ Use data from **me/ABOUT_ME.md** for these:
 | Lever | `jobs.lever.co` | Single-page form |
 | SmartRecruiters | `jobs.smartrecruiters.com` | Multi-step form |
 | Workday | `*.wd*.myworkdayjobs.com` | Complex multi-page form |
+
+## When to stop and ask the user
+
+**Do not guess or make assumptions.** If you encounter any of the following, **stop immediately and ask the user** before proceeding:
+
+- A form field you don't know the answer to (e.g., salary expectations, visa status, custom questions not covered in `me/ABOUT_ME.md`)
+- A question about the user's preferences, availability, or personal details not found in the `me/` folder
+- An unexpected page state, error, or flow you haven't seen before
+- Ambiguity about which job to apply to, which option to select, or whether to proceed
+- Any action that could have consequences the user didn't explicitly ask for (e.g., withdrawing an application, accepting terms, connecting with someone)
+
+**It is always better to ask than to guess wrong.** A wrong answer on a job application cannot be undone.
 
 ## Important notes
 

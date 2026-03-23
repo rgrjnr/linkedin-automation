@@ -30,6 +30,10 @@ const FILES = {
 <!-- e.g., fintech, developer tools, AI/ML, healthcare -->
 
 
+## Salary
+- **Current salary**: <!-- e.g., €65,000/year -->
+- **Expected salary**: <!-- e.g., €70,000–75,000/year -->
+
 ## Job preferences
 - **Work model**: <!-- Remote / Hybrid / On-site -->
 - **Visa sponsorship needed**: <!-- Yes / No -->
