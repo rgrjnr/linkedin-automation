@@ -4,6 +4,7 @@
   "description": "Claude Code + Playwright MCP for interacting with LinkedIn through a browser using your authenticated session.",
   "main": "prepare-storage-state.js",
   "scripts": {
+    "postinstall": "node postinstall.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

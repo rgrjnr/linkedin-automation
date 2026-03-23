@@ -22,9 +22,15 @@ node prepare-storage-state.js
 
 This converts `.cookies` into `storage-state.json` (the format Playwright expects).
 
-### 4. Create your profile
+### 4. Fill in your profile
 
-Create an `ABOUT.md` file with your professional details (name, location, skills, experience). This is used by Claude to fill application forms and generate cover letters.
+After `npm install`, a `me/` folder is created with templates:
+
+- **`me/ABOUT_ME.md`** — Your info, skills, and job preferences
+- **`me/EXPERIENCE.md`** — Detailed work history
+- **`me/cv.pdf`** — Drop your CV here
+
+Fill these in — Claude uses them to tailor applications and cover letters.
 
 ### 5. Start a Claude Code session
 
@@ -62,7 +68,7 @@ LinkedIn cookies last ~30 days. When your session expires (you'll see login prom
 | `generate-cover-letter.js` | Generates a tailored PDF cover letter |
 | `log-application.js` | Logs a job application to `applications.csv` |
 | `CLAUDE.md` | Instructions for Claude Code on how to use the automation |
-| `ABOUT.md` | Your professional profile (not tracked in git) |
+| `me/` | Your profile, experience, and CV (not tracked in git) |
 
 ## License
 

@@ -124,12 +124,12 @@ When applying to multiple jobs, **always use a subagent for each application** t
 Apply to the job currently visible in the browser. The job is: "[Job Title]" at "[Company]".
 
 Instructions:
-- Read ABOUT.md for profile context
+- Read me/ABOUT_ME.md and me/EXPERIENCE.md for profile context
 - Read CLAUDE.md for the Easy Apply flow
 - Click on the job in the list (ref: [ref]) to open the detail panel
 - Click the Easy Apply button and complete all form steps
 - If there's a cover letter step, generate one using: node generate-cover-letter.js "cover letter text"
-  Write a tailored cover letter based on the job description (from the snapshot) and ABOUT.md
+  Write a tailored cover letter based on the job description (from the snapshot), me/ABOUT_ME.md, and me/EXPERIENCE.md
   Then upload the generated cover letter PDF via the file upload button in the form
 - After submitting, log the application: node log-application.js "Title" "Company" "Location" "Type" "URL" "notes"
 - Report back: success/failure, job title, company, and any issues encountered
@@ -148,12 +148,12 @@ Generate a tailored PDF cover letter for each application:
 node generate-cover-letter.js "Company Name" "Dear Hiring Manager,\n\nYour cover letter text here...\n\nBest regards,\n[Your Name]"
 ```
 
-- Outputs `[Your Name] - Company Name Cover Letter.pdf` (name is read from ABOUT.md)
-- The PDF includes the user's name, location, email, LinkedIn URL, and the current date as a header (pulled from ABOUT.md)
+- Outputs `[Your Name] - Company Name Cover Letter.pdf` (name is read from me/ABOUT_ME.md)
+- The PDF includes the user's name, location, email, LinkedIn URL, and the current date as a header (pulled from me/ABOUT_ME.md)
 - Must be under 512 KB (LinkedIn's limit for cover letters)
-- Write the cover letter based on: the **job description** (from the snapshot) + **ABOUT.md** (profile/skills)
+- Write the cover letter based on: the **job description** (from the snapshot) + **me/ABOUT_ME.md** (profile/skills) + **me/EXPERIENCE.md** (work history)
 - Keep it concise: 3-4 paragraphs, tailored to the specific role and company
-- Highlight relevant experience from ABOUT.md that matches the job requirements
+- Highlight relevant experience from me/EXPERIENCE.md that matches the job requirements
 
 ## Applying to jobs (External ATS / "Candidatar-se no site da empresa")
 
@@ -181,14 +181,14 @@ Non-Easy Apply jobs show a **"Candidatar-se no site da empresa"** button instead
 
 ### Common form fields to fill
 
-Use data from **ABOUT.md** for these:
+Use data from **me/ABOUT_ME.md** for these:
 - **Full Name**
 - **Email**
 - **Phone**
 - **LinkedIn URL**
 - **Location**
 - **Sponsorship needed**
-- **Resume** (upload the CV file referenced in ABOUT.md)
+- **Resume** (upload `me/cv.pdf`)
 
 ### Known ATS platforms
 

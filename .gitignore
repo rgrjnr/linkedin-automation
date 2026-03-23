@@ -4,10 +4,11 @@ node_modules/
 # Sensitive / personal files
 .cookies
 storage-state.json
+me/
 ABOUT.md
+*.pdf
 applications.csv
 cover-letters/
-*.pdf
 
 # Playwright
 .playwright/

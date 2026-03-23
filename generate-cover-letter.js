@@ -20,7 +20,7 @@ if (!fs.existsSync(dir)) fs.mkdirSync(dir);
 let userName = "Your Name";
 let userDetails = "Location | email@example.com | linkedin.com/in/yourprofile";
 try {
-  const about = fs.readFileSync("ABOUT.md", "utf-8");
+  const about = fs.readFileSync("me/ABOUT_ME.md", "utf-8");
   const nameMatch = about.match(/^#\s*About\s+(.+)/im);
   if (nameMatch) userName = nameMatch[1].trim();
   const emailMatch = about.match(/Email:\s*(.+)/i);
@@ -29,7 +29,7 @@ try {
   const parts = [locationMatch, emailMatch, linkedinMatch].filter(Boolean).map(m => m[1] || m[0]);
   if (parts.length) userDetails = parts.join(" | ");
 } catch (e) {
-  console.warn("Warning: ABOUT.md not found. Using placeholder header. Create ABOUT.md with your profile info.");
+  console.warn("Warning: me/ABOUT_ME.md not found. Run 'npm install' to generate templates, then fill in your info.");
 }
 
 const output = `${dir}/${userName} - ${company} Cover Letter.pdf`;
