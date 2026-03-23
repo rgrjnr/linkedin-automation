@@ -130,7 +130,7 @@ Instructions:
 - Click the Easy Apply button and complete all form steps
 - If there's a cover letter step, generate one using: node generate-cover-letter.js "cover letter text"
   Write a tailored cover letter based on the job description (from the snapshot) and ABOUT.md
-  Then upload the generated "Roger Junior - Company Name Cover Letter.pdf" via the file upload button in the form
+  Then upload the generated cover letter PDF via the file upload button in the form
 - After submitting, log the application: node log-application.js "Title" "Company" "Location" "Type" "URL" "notes"
 - Report back: success/failure, job title, company, and any issues encountered
 ```
@@ -145,11 +145,11 @@ This keeps the main context clean — each application involves many snapshots a
 Generate a tailored PDF cover letter for each application:
 
 ```bash
-node generate-cover-letter.js "Company Name" "Dear Hiring Manager,\n\nYour cover letter text here...\n\nBest regards,\nRoger Junior"
+node generate-cover-letter.js "Company Name" "Dear Hiring Manager,\n\nYour cover letter text here...\n\nBest regards,\n[Your Name]"
 ```
 
-- Outputs `Roger Junior - Company Name Cover Letter.pdf`
-- The PDF includes Roger's name, location, email, LinkedIn URL, and the current date as a header
+- Outputs `[Your Name] - Company Name Cover Letter.pdf` (name is read from ABOUT.md)
+- The PDF includes the user's name, location, email, LinkedIn URL, and the current date as a header (pulled from ABOUT.md)
 - Must be under 512 KB (LinkedIn's limit for cover letters)
 - Write the cover letter based on: the **job description** (from the snapshot) + **ABOUT.md** (profile/skills)
 - Keep it concise: 3-4 paragraphs, tailored to the specific role and company
@@ -182,13 +182,13 @@ Non-Easy Apply jobs show a **"Candidatar-se no site da empresa"** button instead
 ### Common form fields to fill
 
 Use data from **ABOUT.md** for these:
-- **Full Name**: Roger Junior
-- **Email**: roger@rogerjunior.com
-- **Phone**: +351 915 708 522
-- **LinkedIn URL**: https://www.linkedin.com/in/rogerjunior/
-- **Location**: Lisbon, Portugal
-- **Sponsorship needed**: No
-- **Resume**: Upload `ROGERJUNIOR_ENGLISH_CV_2025.pdf`
+- **Full Name**
+- **Email**
+- **Phone**
+- **LinkedIn URL**
+- **Location**
+- **Sponsorship needed**
+- **Resume** (upload the CV file referenced in ABOUT.md)
 
 ### Known ATS platforms
 

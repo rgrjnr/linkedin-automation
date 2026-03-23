@@ -3,7 +3,7 @@ const PDFDocument = require("pdfkit");
 
 // Usage: node generate-cover-letter.js "Company Name" "cover letter text"
 // The cover letter text can include \n for line breaks.
-// Output: "Roger Junior - Company Name Cover Letter.pdf"
+// Output: "cover-letters/Company Name Cover Letter.pdf"
 
 const [, , company, text] = process.argv;
 
@@ -16,7 +16,23 @@ if (!company || !text) {
 
 const dir = "cover-letters";
 if (!fs.existsSync(dir)) fs.mkdirSync(dir);
-const output = `${dir}/Roger Junior - ${company} Cover Letter.pdf`;
+// Load user profile from ABOUT.md for header info
+let userName = "Your Name";
+let userDetails = "Location | email@example.com | linkedin.com/in/yourprofile";
+try {
+  const about = fs.readFileSync("ABOUT.md", "utf-8");
+  const nameMatch = about.match(/^#\s*About\s+(.+)/im);
+  if (nameMatch) userName = nameMatch[1].trim();
+  const emailMatch = about.match(/Email:\s*(.+)/i);
+  const locationMatch = about.match(/Location:\s*(.+)/i);
+  const linkedinMatch = about.match(/linkedin\.com\/in\/[\w-]+/i);
+  const parts = [locationMatch, emailMatch, linkedinMatch].filter(Boolean).map(m => m[1] || m[0]);
+  if (parts.length) userDetails = parts.join(" | ");
+} catch (e) {
+  console.warn("Warning: ABOUT.md not found. Using placeholder header. Create ABOUT.md with your profile info.");
+}
+
+const output = `${dir}/${userName} - ${company} Cover Letter.pdf`;
 const doc = new PDFDocument({
   size: "A4",
   margins: { top: 60, bottom: 60, left: 60, right: 60 },
@@ -26,11 +42,11 @@ const stream = fs.createWriteStream(output);
 doc.pipe(stream);
 
 // Header
-doc.fontSize(11).font("Helvetica-Bold").text("Roger Junior", { align: "left" });
+doc.fontSize(11).font("Helvetica-Bold").text(userName, { align: "left" });
 doc
   .fontSize(9)
   .font("Helvetica")
-  .text("Lisboa, Portugal | roger@rogerjunior.com | linkedin.com/in/rogerjunior", {
+  .text(userDetails, {
     align: "left",
   });
 
