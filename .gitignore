@@ -1,0 +1,17 @@
+# Dependencies
+node_modules/
+
+# Sensitive / personal files
+.cookies
+storage-state.json
+ABOUT.md
+applications.csv
+cover-letters/
+*.pdf
+
+# Playwright
+.playwright/
+.playwright-cli/
+
+# Claude
+.claude/

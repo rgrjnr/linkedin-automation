@@ -1,0 +1,16 @@
+{
+  "name": "linkedin-automation",
+  "version": "1.0.0",
+  "description": "Claude Code + Playwright MCP for interacting with LinkedIn through a browser using your authenticated session.",
+  "main": "prepare-storage-state.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@playwright/cli": "^0.1.1",
+    "pdfkit": "^0.18.0"
+  },
+  "keywords": []
+}
